@@ -7,6 +7,8 @@ module HoursPlayed {
 	requires transitive javafx.swing;
 	requires transitive javafx.swt;
 	requires transitive javafx.web;
-	exports application;
-	opens application;
+	exports view;
+	exports controller;
+	opens view;
+	opens controller;
 }
