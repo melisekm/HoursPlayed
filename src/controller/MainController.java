@@ -69,8 +69,6 @@ public class MainController extends Controller {
 	}
 
 	public void onStartBtnClick() {
-		System.out.println("Dog");
-
 		if (head.isSessionStarted() == false) {
 			this.dateOrig.setText(head.firstRunTotalTime());
 			this.head.startSession();
@@ -99,48 +97,31 @@ public class MainController extends Controller {
 		this.onStopBtnClick();
 	}
 
-	@FXML
-	void initialize() {
-		//io.clearContent();
-
-		Main.getWindow().setOnCloseRequest(e -> {
-			io.saveObj(head);
-			System.exit(0);
-		});
-		this.head = this.io.initialize();
-		
-			this.loadExisting();
-		this.head.checkToTwoWeekSum();
-		this.setPlayingStateLabels();
-		this.dateOrig.setText(head.getTotalTime());
-		this.dateTwoWeeks.setText(head.getTwoWeeks());
-		this.processCheck();
-
-	}
-	
-	public void loadExisting() {
-		if(this.head.getTotalTime() != null) {
+	public void init() {
+		if (this.head.getTotalHoursPlayed() != 0) {
 			this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
 			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
 		}
-
+		this.setPlayingStateLabels();
+		this.head.checkToTwoWeekSum();
+		this.dateOrig.setText(head.getTotalTime());
+		this.dateTwoWeeks.setText(head.getTwoWeeks());
 	}
-	
 
 	public void processCheck() {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				Platform.runLater(() -> {
-					if (new ProcessHook().isProcessRunning("mspaint.exe")) {
+					if (new ProcessHook().isProcessRunning("Wow.exe")) {
 						onStartBtnClick();
-					} else
-						onStopBtnClick();
+					}
+					// else onStopBtnClick();
 				});
 			}
 		};
 		Timer timer = new Timer();
-		timer.schedule(task, new Date(), 3000);
+		timer.schedule(task, new Date(), 600000);
 	}
 
 	public void setPlayingStateLabels() {
@@ -162,4 +143,19 @@ public class MainController extends Controller {
 		}
 
 	}
+	
+	@FXML
+	void initialize() {
+		//io.clearContent();
+
+		Main.getWindow().setOnCloseRequest(e -> {
+			io.saveObj(head);
+			System.exit(0);
+		});
+		this.head = this.io.initialize();
+		this.init();
+		this.processCheck();
+
+	}
+
 }

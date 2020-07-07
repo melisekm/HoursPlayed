@@ -40,7 +40,7 @@
                   <Font size="29.0" />
                </font>
             </Label>
-            <Label fx:id="total" layoutX="14.0" layoutY="16.0" text="TOTAL: XX.XX hours">
+            <Label fx:id="total" layoutX="14.0" layoutY="16.0">
                <font>
                   <Font size="20.0" />
                </font>
