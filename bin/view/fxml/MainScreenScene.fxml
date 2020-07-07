@@ -20,17 +20,17 @@
                   <Font name="Lucida Console" size="18.0" />
                </font>
             </Button>
-            <Label fx:id="playingLabel" layoutX="151.0" layoutY="205.0" prefHeight="35.0" prefWidth="94.0" text="PLAYING" textFill="#0067ff">
+            <Label fx:id="playingLabel" layoutX="266.0" layoutY="205.0" prefHeight="35.0" prefWidth="94.0" text="PLAYING" textFill="#0067ff">
                <font>
                   <Font name="Lucida Console" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="notPlayingLabel" layoutX="359.0" layoutY="210.0" prefHeight="25.0" prefWidth="139.0" text="NOT PLAYING" textFill="RED">
+            <Label fx:id="notPlayingLabel" layoutX="243.0" layoutY="210.0" prefHeight="25.0" prefWidth="139.0" text="NOT PLAYING" textFill="RED">
                <font>
                   <Font name="Lucida Console" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="date" layoutX="178.0" layoutY="170.0" prefHeight="35.0" prefWidth="284.0" text="XX.XX.XXXX - XX.XX.XXXX">
+            <Label fx:id="dateTwoWeeks" layoutX="178.0" layoutY="170.0" prefHeight="35.0" prefWidth="284.0" text="XX.XX.XXXX - XX.XX.XXXX">
                <font>
                   <Font size="24.0" />
                </font>
@@ -45,17 +45,17 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label fx:id="dateOrig" layoutX="14.0" layoutY="46.0" text="od XX.XX.XXXX">
+            <Label fx:id="dateOrig" layoutX="14.0" layoutY="46.0">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label fx:id="hrsCurr" layoutX="273.0" layoutY="46.0" text="XX.X">
+            <Label fx:id="hrsCurr" layoutX="150.0" layoutY="43.0">
                <font>
                   <Font size="40.0" />
                </font>
             </Label>
-            <Label fx:id="sessionLabel" layoutX="166.0" layoutY="344.0" text="THIS SESSION: XX.X hours">
+            <Label fx:id="sessionLabel" layoutX="166.0" layoutY="344.0">
                <font>
                   <Font size="22.0" />
                </font>

@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.DateControl;
-import view.IOHandler;
 import view.Main;
 
 public class MainController extends Controller {
@@ -31,7 +30,7 @@ public class MainController extends Controller {
 	private Label notPlayingLabel;
 
 	@FXML
-	private Label date;
+	private Label dateTwoWeeks;
 
 	@FXML
 	private Label total;
@@ -50,6 +49,11 @@ public class MainController extends Controller {
 
 	@FXML
 	void refreshAction(ActionEvent event) {
+		this.head.checkToTwoWeekSum();
+		this.dateTwoWeeks.setText(head.getTwoWeeks());
+		if(head.getTotalHoursPlayed() != 0)
+			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
+
 	}
 
 	@FXML
@@ -61,37 +65,44 @@ public class MainController extends Controller {
 
 	@FXML
 	void stopBtnAction(ActionEvent event) {
-		head.stopSession();
-		this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
-		this.sessionLabel.setText("THIS SESSION: " + head.millisToTime(head.getSessionTime()));
-		this.setPlayingStateLabels();
+		if (head.isSessionStarted()) {
+			head.stopSession();
+			this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
+			this.sessionLabel.setText("THIS SESSION: " + head.millisToTime(head.getSessionTime()));
+			this.setPlayingStateLabels();
+			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
+		} else
+			head.setSessionTime(0);
 	}
 
 	@FXML
 	void initialize() {
-		//io.clearContent();
-		
+		io.clearContent();
+
 		Main.getWindow().setOnCloseRequest(e -> {
 			io.saveObj(head);
 		});
 		this.head = this.io.initialize();
+		this.head.checkToTwoWeekSum();
 		this.setPlayingStateLabels();
-		this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
-		this.sessionLabel.setText("LAST SESSION: " + head.millisToTime(head.getSessionTime()));
-		this.dateOrig.setText("od " + head.getTotalTime());
+		this.dateOrig.setText(head.getTotalTime());
+		this.dateTwoWeeks.setText(head.getTwoWeeks());
 	}
-	
+
 	public void setPlayingStateLabels() {
 		try {
-			if(head.isSessionStarted()) {
+			if (head.isSessionStarted()) {
 				this.playingLabel.setVisible(true);
 				this.notPlayingLabel.setVisible(false);
-			}
-			else {
+				this.startBtn.setVisible(false);
+				this.stopBtn.setVisible(true);
+			} else {
 				this.playingLabel.setVisible(false);
-				this.notPlayingLabel.setVisible(true);			
+				this.notPlayingLabel.setVisible(true);
+				this.startBtn.setVisible(true);
+				this.stopBtn.setVisible(false);
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Set playing state Error");
 		}

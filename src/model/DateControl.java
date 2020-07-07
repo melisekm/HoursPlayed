@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,42 +22,75 @@ public class DateControl implements Serializable {
 	private long sessionTime;
 	private boolean sessionStarted;
 
+	ArrayList<SessionTime> twoWeekSessions;
 
 	public DateControl() {
 		this.totalHoursPlayed = 0;
 		this.totalTime = null;
 		this.sessionStarted = false;
+		this.twoWeekSessions = new ArrayList<SessionTime>();
 	}
 
 	public void startSession() {
 		this.sessionStarted = true;
 		this.sessionStart = LocalTime.now();
-		
 	}
-	
+
 	public void stopSession() {
-		if(this.sessionStarted) {
+		if (this.sessionStarted) {
 			this.sessionTime = this.sessionTime();
+			SessionTime current = new SessionTime(this.sessionStart, this.sessionTime);
+			if (this.twoWeekSessions == null)
+				this.twoWeekSessions = new ArrayList<SessionTime>();
+			this.twoWeekSessions.add(current);
 			this.totalHoursPlayed += this.sessionTime;
-			System.out.println(this.sessionTime);
 		}
-		else
-			this.sessionTime = 0;
 		this.sessionStarted = false;
 	}
-	
+
 	public long sessionTime() {
 		this.sessionEnd = LocalTime.now();
 		return Duration.between(sessionStart, sessionEnd).toMillis();
 	}
-	
-	public String millisToTime(long millis) {
-		return String.format("%02d hours %02d minutes", 
-				TimeUnit.MILLISECONDS.toHours(millis),
-				TimeUnit.MILLISECONDS.toMinutes(millis) -  
-				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+
+	public void checkToTwoWeekSum() {
+		ArrayList<SessionTime> toremove = new ArrayList<SessionTime>();
+
+		for (SessionTime i : this.twoWeekSessions) {
+			if (i.sessionStarted.isBefore(LocalTime.now().minusHours(336))) {
+				toremove.add(i);
+			}
+		}
+		for (SessionTime i : toremove) {
+			this.twoWeekSessions.remove(i);
+		}
 	}
-	
+
+	public long calcTwoWeekSum() {
+		long sum = 0;
+		for (SessionTime i : this.twoWeekSessions) {
+			if (i.sessionStarted.isAfter(LocalTime.now().minusHours(336)))
+				sum += i.sessionLength;
+		}
+		return sum;
+	}
+
+	public String getTwoWeeks() {
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		LocalDateTime prev = LocalDateTime.now().minusHours(336);
+		LocalDateTime now = LocalDateTime.now();
+		String formatPrev = prev.format(dateFormat);
+		String formatNow = now.format(dateFormat);
+		return formatPrev + " - " + formatNow;
+		
+	}
+
+	public String millisToTime(long millis) {
+		return String.format("%02d hours %02d minutes", TimeUnit.MILLISECONDS.toHours(millis),
+				TimeUnit.MILLISECONDS.toMinutes(millis)
+						- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+	}
+
 	public long getTotalHoursPlayed() {
 		return totalHoursPlayed;
 	}
