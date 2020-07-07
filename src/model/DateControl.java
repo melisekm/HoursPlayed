@@ -8,10 +8,6 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-/**
- * https://www.baeldung.com/java-8-date-time-intro
- */
-
 public class DateControl implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -21,8 +17,7 @@ public class DateControl implements Serializable {
 	private LocalTime sessionEnd;
 	private long sessionTime;
 	private boolean sessionStarted;
-
-	ArrayList<SessionTime> twoWeekSessions;
+	private ArrayList<SessionTime> twoWeekSessions;
 
 	public DateControl() {
 		this.totalHoursPlayed = 0;
@@ -82,7 +77,7 @@ public class DateControl implements Serializable {
 		String formatPrev = prev.format(dateFormat);
 		String formatNow = now.format(dateFormat);
 		return formatPrev + " - " + formatNow;
-		
+
 	}
 
 	public String millisToTime(long millis) {
@@ -103,7 +98,6 @@ public class DateControl implements Serializable {
 		if (this.totalTime == null)
 			return "\nAplikacia este nebola spustena.";
 		try {
-			// DateTimeFormatter totalFormat = DateTimeFormatter.ISO_LOCAL_TIME;
 			DateTimeFormatter totalFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 			String formattedTotalTime = this.totalTime.format(totalFormat);
 			return formattedTotalTime;

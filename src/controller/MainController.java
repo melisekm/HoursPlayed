@@ -1,16 +1,28 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.DateControl;
+import model.ProcessHook;
 import view.Main;
 
 public class MainController extends Controller {
-	DateControl head;
+	private DateControl head;
 	@FXML
 	private ResourceBundle resources;
 
@@ -51,20 +63,23 @@ public class MainController extends Controller {
 	void refreshAction(ActionEvent event) {
 		this.head.checkToTwoWeekSum();
 		this.dateTwoWeeks.setText(head.getTwoWeeks());
-		if(head.getTotalHoursPlayed() != 0)
+		if (head.getTotalHoursPlayed() != 0)
 			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
 
 	}
 
 	@FXML
 	void startBtnAction(ActionEvent event) {
+		this.onStartBtnClick();
+	}
+
+	public void onStartBtnClick() {
 		this.dateOrig.setText(head.firstRunTotalTime());
-		head.startSession();
+		this.head.startSession();
 		this.setPlayingStateLabels();
 	}
 
-	@FXML
-	void stopBtnAction(ActionEvent event) {
+	public void onStopBtnClick() {
 		if (head.isSessionStarted()) {
 			head.stopSession();
 			this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
@@ -76,8 +91,13 @@ public class MainController extends Controller {
 	}
 
 	@FXML
+	void stopBtnAction(ActionEvent event) {
+		this.onStopBtnClick();
+	}
+
+	@FXML
 	void initialize() {
-		io.clearContent();
+		 io.clearContent();
 
 		Main.getWindow().setOnCloseRequest(e -> {
 			io.saveObj(head);
@@ -87,7 +107,72 @@ public class MainController extends Controller {
 		this.setPlayingStateLabels();
 		this.dateOrig.setText(head.getTotalTime());
 		this.dateTwoWeeks.setText(head.getTwoWeeks());
+		
+		
+		TimerTask task = new TimerTask() {
+			public boolean isProcessRunning(String process) {
+				String line;
+				String pidInfo = "";
+				Process p;
+				
+				try {
+					p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
+
+					BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+					while ((line = input.readLine()) != null) {
+						pidInfo += line;
+					}
+
+					input.close();
+				} catch (IOException e) {
+					System.out.println("CHYBA PRI OTVARANI TASKLIST.EXE");
+					e.printStackTrace();
+				}
+				if (pidInfo.contains(process)) {
+					System.out.println("DOGDGG");
+					return true;
+				}
+				return false;
+			}
+
+		    @Override
+		    public void run() {
+		        if(this.isProcessRunning("mspaint.exe"));
+		        	System.out.println("Dog");
+		    }
+		};
+
+		Timer timer = new Timer();
+		timer.schedule(task, new Date(), 3000);
+		
+		
+		//Platform.runLater(new Runnable(){
+
+			//@Override
+			//public void run() {
+				/*Runnable processCheck = new Runnable() {
+					public void run() {
+						if (new ProcessHook().isProcessRunning("notepad.exe")) {
+							System.out.println("Dog");
+							onStartBtnClick();
+		
+						}else {
+							onStartBtnClick();
+						}
+					} 
+				};
+				ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+				executor.scheduleAtFixedRate(processCheck, 0, 3, TimeUnit.SECONDS);
+			*/
+				
+			//}
+			
+		//});
+
 	}
+	
+	
 
 	public void setPlayingStateLabels() {
 		try {
