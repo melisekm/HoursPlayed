@@ -50,13 +50,13 @@ public class MainController extends Controller {
 
 	@FXML
 	void refreshAction(ActionEvent event) {
-
 	}
 
 	@FXML
 	void startBtnAction(ActionEvent event) {
 		this.dateOrig.setText(head.firstRunTotalTime());
 		head.startSession();
+		this.setPlayingStateLabels();
 	}
 
 	@FXML
@@ -64,19 +64,37 @@ public class MainController extends Controller {
 		head.stopSession();
 		this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
 		this.sessionLabel.setText("THIS SESSION: " + head.millisToTime(head.getSessionTime()));
+		this.setPlayingStateLabels();
 	}
 
 	@FXML
 	void initialize() {
-		io.clearContent();
+		//io.clearContent();
 		
 		Main.getWindow().setOnCloseRequest(e -> {
 			io.saveObj(head);
 		});
-
 		this.head = this.io.initialize();
-		this.total.setText("TOTAL: " + head.getTotalHoursPlayed() + " hours");
+		this.setPlayingStateLabels();
+		this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
+		this.sessionLabel.setText("LAST SESSION: " + head.millisToTime(head.getSessionTime()));
 		this.dateOrig.setText("od " + head.getTotalTime());
+	}
+	
+	public void setPlayingStateLabels() {
+		try {
+			if(head.isSessionStarted()) {
+				this.playingLabel.setVisible(true);
+				this.notPlayingLabel.setVisible(false);
+			}
+			else {
+				this.playingLabel.setVisible(false);
+				this.notPlayingLabel.setVisible(true);			
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.err.println("Set playing state Error");
+		}
 
 	}
 }
