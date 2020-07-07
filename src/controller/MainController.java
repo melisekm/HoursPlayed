@@ -68,15 +68,14 @@ public class MainController extends Controller {
 
 	}
 
-	@FXML
-	void startBtnAction(ActionEvent event) {
-		this.onStartBtnClick();
-	}
-
 	public void onStartBtnClick() {
-		this.dateOrig.setText(head.firstRunTotalTime());
-		this.head.startSession();
-		this.setPlayingStateLabels();
+		System.out.println("Dog");
+
+		if (head.isSessionStarted() == false) {
+			this.dateOrig.setText(head.firstRunTotalTime());
+			this.head.startSession();
+			this.setPlayingStateLabels();
+		}
 	}
 
 	public void onStopBtnClick() {
@@ -91,88 +90,58 @@ public class MainController extends Controller {
 	}
 
 	@FXML
+	void startBtnAction(ActionEvent event) {
+		this.onStartBtnClick();
+	}
+
+	@FXML
 	void stopBtnAction(ActionEvent event) {
 		this.onStopBtnClick();
 	}
 
 	@FXML
 	void initialize() {
-		 io.clearContent();
+		//io.clearContent();
 
 		Main.getWindow().setOnCloseRequest(e -> {
 			io.saveObj(head);
+			System.exit(0);
 		});
 		this.head = this.io.initialize();
+		
+			this.loadExisting();
 		this.head.checkToTwoWeekSum();
 		this.setPlayingStateLabels();
 		this.dateOrig.setText(head.getTotalTime());
 		this.dateTwoWeeks.setText(head.getTwoWeeks());
-		
-		
-		TimerTask task = new TimerTask() {
-			public boolean isProcessRunning(String process) {
-				String line;
-				String pidInfo = "";
-				Process p;
-				
-				try {
-					p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
-
-					BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-					while ((line = input.readLine()) != null) {
-						pidInfo += line;
-					}
-
-					input.close();
-				} catch (IOException e) {
-					System.out.println("CHYBA PRI OTVARANI TASKLIST.EXE");
-					e.printStackTrace();
-				}
-				if (pidInfo.contains(process)) {
-					System.out.println("DOGDGG");
-					return true;
-				}
-				return false;
-			}
-
-		    @Override
-		    public void run() {
-		        if(this.isProcessRunning("mspaint.exe"));
-		        	System.out.println("Dog");
-		    }
-		};
-
-		Timer timer = new Timer();
-		timer.schedule(task, new Date(), 3000);
-		
-		
-		//Platform.runLater(new Runnable(){
-
-			//@Override
-			//public void run() {
-				/*Runnable processCheck = new Runnable() {
-					public void run() {
-						if (new ProcessHook().isProcessRunning("notepad.exe")) {
-							System.out.println("Dog");
-							onStartBtnClick();
-		
-						}else {
-							onStartBtnClick();
-						}
-					} 
-				};
-				ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-				executor.scheduleAtFixedRate(processCheck, 0, 3, TimeUnit.SECONDS);
-			*/
-				
-			//}
-			
-		//});
+		this.processCheck();
 
 	}
 	
+	public void loadExisting() {
+		if(this.head.getTotalTime() != null) {
+			this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
+			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
+		}
+
+	}
 	
+
+	public void processCheck() {
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					if (new ProcessHook().isProcessRunning("mspaint.exe")) {
+						onStartBtnClick();
+					} else
+						onStopBtnClick();
+				});
+			}
+		};
+		Timer timer = new Timer();
+		timer.schedule(task, new Date(), 3000);
+	}
 
 	public void setPlayingStateLabels() {
 		try {

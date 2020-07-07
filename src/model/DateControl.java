@@ -13,8 +13,8 @@ public class DateControl implements Serializable {
 
 	private long totalHoursPlayed;
 	private LocalDateTime totalTime;
-	private LocalTime sessionStart;
-	private LocalTime sessionEnd;
+	private LocalDateTime sessionStart;
+	private LocalDateTime sessionEnd;
 	private long sessionTime;
 	private boolean sessionStarted;
 	private ArrayList<SessionTime> twoWeekSessions;
@@ -28,7 +28,7 @@ public class DateControl implements Serializable {
 
 	public void startSession() {
 		this.sessionStarted = true;
-		this.sessionStart = LocalTime.now();
+		this.sessionStart = LocalDateTime.now();
 	}
 
 	public void stopSession() {
@@ -44,15 +44,14 @@ public class DateControl implements Serializable {
 	}
 
 	public long sessionTime() {
-		this.sessionEnd = LocalTime.now();
+		this.sessionEnd = LocalDateTime.now();
 		return Duration.between(sessionStart, sessionEnd).toMillis();
 	}
 
 	public void checkToTwoWeekSum() {
 		ArrayList<SessionTime> toremove = new ArrayList<SessionTime>();
-
 		for (SessionTime i : this.twoWeekSessions) {
-			if (i.sessionStarted.isBefore(LocalTime.now().minusHours(336))) {
+			if (i.sessionStarted.isBefore(LocalDateTime.now().minusHours(336))) {
 				toremove.add(i);
 			}
 		}
@@ -64,7 +63,7 @@ public class DateControl implements Serializable {
 	public long calcTwoWeekSum() {
 		long sum = 0;
 		for (SessionTime i : this.twoWeekSessions) {
-			if (i.sessionStarted.isAfter(LocalTime.now().minusHours(336)))
+			if (i.sessionStarted.isAfter(LocalDateTime.now().minusHours(336)))
 				sum += i.sessionLength;
 		}
 		return sum;
@@ -123,19 +122,19 @@ public class DateControl implements Serializable {
 		return "od " + this.getTotalTime();
 	}
 
-	public LocalTime getSessionStart() {
+	public LocalDateTime getSessionStart() {
 		return sessionStart;
 	}
 
-	public void setSessionStart(LocalTime sessionStart) {
+	public void setSessionStart(LocalDateTime sessionStart) {
 		this.sessionStart = sessionStart;
 	}
 
-	public LocalTime getSessionEnd() {
+	public LocalDateTime getSessionEnd() {
 		return sessionEnd;
 	}
 
-	public void setSessionEnd(LocalTime sessionEnd) {
+	public void setSessionEnd(LocalDateTime sessionEnd) {
 		this.sessionEnd = sessionEnd;
 	}
 
