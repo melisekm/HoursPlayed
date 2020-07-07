@@ -1,4 +1,4 @@
-package application;
+package view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,18 +7,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import model.DateControl;
 
 public class IOHandler {
 	public DateControl initialize() {
 		try {
 			System.out.println("Deserializujem data...");
 			FileInputStream fileInputStream = new FileInputStream("data\\data.dat");
-			
+
 			if (fileInputStream.available() == 0) { // skontroluje, ci nie je prazdny
 				fileInputStream.close();
 				return this.createNewObj();
 			}
-			
+
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);// nacita objekty
 			DateControl data = (DateControl) objectInputStream.readObject();
 			System.out.println("Hotovo");
@@ -28,10 +29,11 @@ public class IOHandler {
 		} catch (IOException | ClassNotFoundException e) {
 			System.err.println("ERROR");
 			e.printStackTrace();
-		} 
-		
+		}
+
 		return null;
 	}
+
 	public void saveObj(DateControl data) {
 		System.err.println("Prebieha ukladanie, prosim nevypinajte program");
 		try {
@@ -43,7 +45,7 @@ public class IOHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public DateControl createNewObj() {
 		return new DateControl();
 	}

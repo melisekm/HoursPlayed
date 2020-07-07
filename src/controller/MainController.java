@@ -1,4 +1,4 @@
-package application;
+package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -6,10 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import model.DateControl;
+import view.IOHandler;
 
-public class MainController {
-	IOHandler io = new IOHandler();
-	DateControl head = io.initialize();
+public class MainController extends Controller {
+	DateControl head;
 	@FXML
 	private ResourceBundle resources;
 
@@ -63,8 +64,9 @@ public class MainController {
 
 	@FXML
 	void initialize() {
-
-		this.total.setText("TOTAL: " + head.totalF + " hours");
+		this.head = this.io.initialize();
+		this.total.setText("TOTAL: " + head.getTotalHoursPlayed() + " hours");
+		this.dateOrig.setText("od " + head.getTotalTime());
 
 	}
 }
