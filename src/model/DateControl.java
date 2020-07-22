@@ -97,7 +97,7 @@ public class DateControl implements Serializable {
 		if (this.totalTime == null)
 			return "\nAplikacia este nebola spustena.";
 		try {
-			DateTimeFormatter totalFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+			DateTimeFormatter totalFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			String formattedTotalTime = this.totalTime.format(totalFormat);
 			return formattedTotalTime;
 
