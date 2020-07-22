@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +22,7 @@ public class DateControl implements Serializable {
 		this.totalHoursPlayed = 0;
 		this.totalTime = null;
 		this.sessionStarted = false;
-		this.twoWeekSessions = new ArrayList<SessionTime>();
+		this.setTwoWeekSessions(new ArrayList<SessionTime>());
 	}
 
 	public void startSession() {
@@ -35,9 +34,9 @@ public class DateControl implements Serializable {
 		if (this.sessionStarted) {
 			this.sessionTime = this.sessionTime();
 			SessionTime current = new SessionTime(this.sessionStart, this.sessionTime);
-			if (this.twoWeekSessions == null)
-				this.twoWeekSessions = new ArrayList<SessionTime>();
-			this.twoWeekSessions.add(current);
+			if (this.getTwoWeekSessions() == null)
+				this.setTwoWeekSessions(new ArrayList<SessionTime>());
+			this.getTwoWeekSessions().add(current);
 			this.totalHoursPlayed += this.sessionTime;
 		}
 		this.sessionStarted = false;
@@ -50,19 +49,19 @@ public class DateControl implements Serializable {
 
 	public void checkToTwoWeekSum() {
 		ArrayList<SessionTime> toremove = new ArrayList<SessionTime>();
-		for (SessionTime i : this.twoWeekSessions) {
+		for (SessionTime i : this.getTwoWeekSessions()) {
 			if (i.sessionStarted.isBefore(LocalDateTime.now().minusHours(336))) {
 				toremove.add(i);
 			}
 		}
 		for (SessionTime i : toremove) {
-			this.twoWeekSessions.remove(i);
+			this.getTwoWeekSessions().remove(i);
 		}
 	}
 
 	public long calcTwoWeekSum() {
 		long sum = 0;
-		for (SessionTime i : this.twoWeekSessions) {
+		for (SessionTime i : this.getTwoWeekSessions()) {
 			if (i.sessionStarted.isAfter(LocalDateTime.now().minusHours(336)))
 				sum += i.sessionLength;
 		}
@@ -102,10 +101,19 @@ public class DateControl implements Serializable {
 			return "od " + formattedTotalTime;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			System.err.println("getTotalTime ERROR");
 		}
 		return null;
+	}
+
+	public String extractSessions() {
+		String sessionList = "";
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		for (SessionTime i : this.twoWeekSessions) {
+			sessionList += i.sessionStarted.format(dateFormat) + " - " + this.millisToTime(i.sessionLength) + "\n";
+		}
+		return sessionList;
 	}
 
 	public void setTotalTime(LocalDateTime totalTime) {
@@ -152,6 +160,14 @@ public class DateControl implements Serializable {
 
 	public void setSessionTime(long sessionTime) {
 		this.sessionTime = sessionTime;
+	}
+
+	public ArrayList<SessionTime> getTwoWeekSessions() {
+		return twoWeekSessions;
+	}
+
+	public void setTwoWeekSessions(ArrayList<SessionTime> twoWeekSessions) {
+		this.twoWeekSessions = twoWeekSessions;
 	}
 
 }

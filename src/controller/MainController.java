@@ -1,16 +1,10 @@
 package controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -19,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.DateControl;
 import model.ProcessHook;
+import view.AlertScreen;
 import view.Main;
 
 public class MainController extends Controller {
@@ -58,7 +53,10 @@ public class MainController extends Controller {
 
 	@FXML
 	private Button refreshBtn;
-
+	
+    @FXML
+    private Button sessionListBtn;
+    
 	@FXML
 	void refreshAction(ActionEvent event) {
 		this.head.checkToTwoWeekSum();
@@ -88,6 +86,15 @@ public class MainController extends Controller {
 		} else
 			head.setSessionTime(0);
 	}
+	
+	public void onSessionListBtnClick() {
+		new AlertScreen().showTextArea("Session List", head.extractSessions());
+	}
+	
+    @FXML
+    void sessionListBtnAction(ActionEvent event) {
+    	this.onSessionListBtnClick();
+    }
 
 	@FXML
 	void startBtnAction(ActionEvent event) {
@@ -103,6 +110,7 @@ public class MainController extends Controller {
 		if (this.head.getTotalHoursPlayed() != 0) {
 			this.total.setText("TOTAL: " + head.millisToTime(head.getTotalHoursPlayed()));
 			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
+			this.sessionListBtn.setText("Session List");
 		}
 		this.setPlayingStateLabels();
 		this.head.checkToTwoWeekSum();
@@ -140,7 +148,7 @@ public class MainController extends Controller {
 				this.stopBtn.setVisible(false);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.err.println("Set playing state Error");
 		}
 
@@ -159,5 +167,4 @@ public class MainController extends Controller {
 		//this.processCheck();
 
 	}
-
 }

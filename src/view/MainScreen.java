@@ -16,7 +16,7 @@ public class MainScreen extends Screen {
 			root = this.loader.load();
 		} catch (IOException e) {
 			System.err.println("MAINSCREEN ERROR SHOW");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return new Scene(root);
 	}

@@ -29,7 +29,7 @@ public class IOHandler {
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.err.println("ERROR");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		return null;

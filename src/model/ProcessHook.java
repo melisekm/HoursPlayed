@@ -23,7 +23,7 @@ public class ProcessHook {
 			input.close();
 		} catch (IOException e) {
 			System.out.println("CHYBA PRI OTVARANI TASKLIST.EXE");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		if (pidInfo.contains(process))
 			return true;
