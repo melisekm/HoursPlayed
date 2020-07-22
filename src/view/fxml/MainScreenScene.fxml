@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.MainController">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="401.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
       <children>
@@ -61,6 +61,7 @@
                </font>
             </Label>
             <Button fx:id="refreshBtn" layoutX="292.0" layoutY="319.0" mnemonicParsing="false" onAction="#refreshAction" text="Refresh" />
+            <Button fx:id="sessionListBtn" layoutX="511.0" layoutY="198.0" mnemonicParsing="false" onAction="#sessionListBtnAction" />
       </children>
     </AnchorPane>
   </children>
