@@ -108,7 +108,7 @@ public class MainController extends Controller {
 		this.dateTwoWeeks.setText(head.getTwoWeeks());
 	}
 
-	public void processCheck() {
+	public void processCheck() { //TODO: presunut do inej triedy, inam, novy button?
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
@@ -154,7 +154,7 @@ public class MainController extends Controller {
 		});
 		this.head = this.io.initialize();
 		this.init();
-		this.processCheck();
+		//this.processCheck();
 
 	}
 
