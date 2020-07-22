@@ -44,8 +44,8 @@ public class DateControl implements Serializable {
 	}
 
 	public long sessionTime() {
-		this.sessionEnd = LocalDateTime.now();
-		return Duration.between(sessionStart, sessionEnd).toMillis();
+		LocalDateTime sessionEnd = LocalDateTime.now();
+		return Duration.between(this.sessionStart, sessionEnd).toMillis();
 	}
 
 	public void checkToTwoWeekSum() {
@@ -99,7 +99,7 @@ public class DateControl implements Serializable {
 		try {
 			DateTimeFormatter totalFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			String formattedTotalTime = this.totalTime.format(totalFormat);
-			return formattedTotalTime;
+			return "od " + formattedTotalTime;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class DateControl implements Serializable {
 	public String firstRunTotalTime() {
 		if (this.totalTime == null)
 			this.setTotalTime();
-		return "od " + this.getTotalTime();
+		return this.getTotalTime();
 	}
 
 	public LocalDateTime getSessionStart() {
