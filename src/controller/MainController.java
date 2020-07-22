@@ -65,7 +65,9 @@ public class MainController extends Controller {
 		this.dateTwoWeeks.setText(head.getTwoWeeks());
 		if (head.getTotalHoursPlayed() != 0)
 			this.hrsCurr.setText(head.millisToTime(head.calcTwoWeekSum()));
-
+		if(head.isSessionStarted()) {
+			this.sessionLabel.setText("THIS SESSION: " + head.millisToTime(head.sessionTime()));
+		}
 	}
 
 	public void onStartBtnClick() {
