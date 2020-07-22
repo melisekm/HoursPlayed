@@ -111,7 +111,9 @@ public class DateControl implements Serializable {
 		String sessionList = "";
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 		for (SessionTime i : this.twoWeekSessions) {
-			sessionList += i.sessionStarted.format(dateFormat) + " - " + this.millisToTime(i.sessionLength) + "\n";
+			LocalDateTime sessionEnd = i.sessionStarted.plusMinutes(TimeUnit.MILLISECONDS.toMinutes(i.sessionLength));
+			sessionList += i.sessionStarted.format(dateFormat) + " " + sessionEnd.format(dateFormat) + " - "
+					+ this.millisToTime(i.sessionLength) + "\n";
 		}
 		return sessionList;
 	}
